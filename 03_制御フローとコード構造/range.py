@@ -15,3 +15,6 @@ print('')
 for i in range(2, 10, 3): # 2から9までで3飛ばしで3回for文が回る
     print(i, end='') # 258 と表示
 print('')
+
+for _ in range(10): # iなどのindexを使用しない場合は_を使用するとスッキリ
+    print('hello') # hello が10回表示
