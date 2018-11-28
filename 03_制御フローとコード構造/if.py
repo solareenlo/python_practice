@@ -11,7 +11,7 @@ else:
 a: int = 5
 b: int = 10
 
-# Pythonではインデントでif分の中身がどこからどこまでかを認識している
+# Pythonではインデントでif文の中身がどこからどこまでかを認識している
 # Pythonのインデントは基本スペース4つ
 if a > 0:
     print('a is positive')
