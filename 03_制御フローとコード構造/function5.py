@@ -17,3 +17,13 @@ def say_something2(word, *args):
         print(arg) # Mike Nance と縦に表示
 
 say_something2('Hi!', 'Mike', 'Nance')
+
+
+
+def say_something3(*args):
+    """*は複数の引数をtupleにしてくれる"""
+    print(args)
+
+t: tuple = ('Mike', 'Nance')
+# *がtupleを分解してくれるので, 分解した状態で関数の引数に渡せる
+say_something3(*t) # ('Mike', 'Nance') と表示
