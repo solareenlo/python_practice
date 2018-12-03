@@ -1,5 +1,6 @@
 """This is a test program."""
 def print_info(func):
+    """decorete"""
     def wrapper(*args, **kwargs):
         print('start')
         result = func(*args, **kwargs)
@@ -9,9 +10,10 @@ def print_info(func):
 
 @print_info # add_numをprint_infoでデコテートするということ
 def add_num(a, b):
+    """add two nums"""
     return a + b
-r = add_num(10, 20)
-print(r) # start end 30 と縦に表示
+R = add_num(10, 20)
+print(R) # start end 30 と縦に表示
 
 # 上記の5行と下記の5行は同じこと
 # def add_num(a, b):
