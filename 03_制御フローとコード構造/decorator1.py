@@ -8,7 +8,7 @@ def print_info(func):
         return result
     return wrapper
 
-@print_info # add_numをprint_infoでデコテートするということ
+@print_info # print_infoでadd_numをデコテートするということ
 def add_num(a, b):
     """add two nums"""
     return a + b
