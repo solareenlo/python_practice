@@ -9,9 +9,9 @@ def print_info(func):
     return wrapper
 
 @print_info # print_infoでadd_numをデコテートするということ
-def add_num(a, b):
+def add_num(num1, num2):
     """add two nums"""
-    return a + b
+    return num1 + num2
 R = add_num(10, 20)
 print(R) # start end 30 と縦に表示
 
