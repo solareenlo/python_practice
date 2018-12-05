@@ -19,18 +19,20 @@ FILE_PASS = os.path.dirname(os.path.abspath(__file__))
 FILE_PASS = os.path.join(FILE_PASS, 'robot')
 FILE_PASS = os.path.join(FILE_PASS, 'templates')
 
-# 初めの挨拶を表示
-HELLO_FILE_PASS = os.path.join(FILE_PASS, 'hello.md')
-with open(HELLO_FILE_PASS, 'r', encoding='utf-8') as template_file:
-    CONTENTS = template_file.read()
-    CONTENTS = CONTENTS.rstrip(os.linesep)
-    CONTENTS = '{splitter}{sep}{contents}{sep}{splitter}{sep}'.format(
-        contents=CONTENTS, splitter="=" * 64, sep=os.linesep)
-    CONTENTS = termcolor.colored(CONTENTS, ROBOT_COLOR)
-    CONTENTS = string.Template(CONTENTS)
+def read_csv(dir_pass, file_name, color=None):
+    """ ファイルを読み込み """
+    file_pass = os.path.join(dir_pass, file_name)
+    with open(file_pass, 'r', encoding='utf-8') as template:
+        contents = template.read()
+        contents = contents.rstrip(os.linesep)
+        contents = '{splitter}{sep}{contents}{sep}{splitter}{sep}'.format(
+            contents=contents, splitter="=" * 64, sep=os.linesep)
+        contents = termcolor.colored(contents, color)
+        return string.Template(contents)
 
-# ユーザーの名前を取得
-USER_NAME = input(CONTENTS.substitute({'robot_name': ROBOT_NAME}))
+# 初めの挨拶を表示して, ユーザー名を取得
+TEMPLATE = read_csv(FILE_PASS, 'hello.md', ROBOT_COLOR)
+USER_NAME = input(TEMPLATE.substitute({'robot_name': ROBOT_NAME}))
 
 # csvファイルのデータを格納する箱を用意
 DATA = collections.defaultdict(int)
@@ -39,28 +41,18 @@ DATA = collections.defaultdict(int)
 if not os.path.exists(CSV):
     pathlib.Path(CSV).touch()
 
-# csvファイルを開く
+# csvファイルを開いて, csvデータを配列に格納
 with open(CSV, 'r+') as csv_file:
     READER = csv.DictReader(csv_file)
     for row in READER:
         DATA[row[NAME]] = int(row[COUNT])
 
-# オススメのレストランを尋ねる
-# SORTED_DATA = sorted(DATA, key=DATA.get, reverse=True)
-# print(SORTED_DATA[0])
 if DATA:
     while True:
-        RECOMMEND_RESTAURANT_FILE_PASS = os.path.join(FILE_PASS, 'greeting.md')
         SORTED_DATA = sorted(DATA, key=DATA.get, reverse=True)
         NEW_RECOMMEND_RESTAURANT = SORTED_DATA[0]
-        with open(RECOMMEND_RESTAURANT_FILE_PASS, 'r', encoding='utf-8') as template_file:
-            CONTENTS = template_file.read()
-            CONTENTS = CONTENTS.rstrip(os.linesep)
-            CONTENTS = '{splitter}{sep}{contents}{sep}{splitter}{sep}'.format(
-                contents=CONTENTS, splitter="=" * 64, sep=os.linesep)
-            CONTENTS = termcolor.colored(CONTENTS, ROBOT_COLOR)
-            CONTENTS = string.Template(CONTENTS)
-        IS_YES = input(CONTENTS.substitute({
+        TEMPLATE = read_csv(FILE_PASS, 'greeting.md', ROBOT_COLOR)
+        IS_YES = input(TEMPLATE.substitute({
             'robot_name': ROBOT_NAME,
             'user_name': USER_NAME,
             'restaurant': NEW_RECOMMEND_RESTAURANT}))
@@ -69,18 +61,9 @@ if DATA:
         if IS_YES.lower() == 'n' or IS_YES.lower() == 'no':
             break
 
-# どのレストランが好きか尋ねる
-WHICH_FILE_PASS = os.path.join(FILE_PASS, 'which_restaurant.md')
-with open(WHICH_FILE_PASS, 'r', encoding='utf-8') as template_file:
-    CONTENTS = template_file.read()
-    CONTENTS = CONTENTS.rstrip(os.linesep)
-    CONTENTS = '{splitter}{sep}{contents}{sep}{splitter}{sep}'.format(
-        contents=CONTENTS, splitter="=" * 64, sep=os.linesep)
-    CONTENTS = termcolor.colored(CONTENTS, ROBOT_COLOR)
-    CONTENTS = string.Template(CONTENTS)
-
-# 好きなレストラン名を取得
-RESTARANT = input(CONTENTS.substitute({'robot_name': ROBOT_NAME, 'user_name': USER_NAME}))
+# どのレストランが好きか尋ねて, テストラン名を保存
+TEMPLATE = read_csv(FILE_PASS, 'which_restaurant.md', ROBOT_COLOR)
+RESTARANT = input(TEMPLATE.substitute({'robot_name': ROBOT_NAME, 'user_name': USER_NAME}))
 
 # レストランの数を1つ増やす
 DATA[RESTARANT.title()] += 1
@@ -93,12 +76,5 @@ with open(CSV, 'w+') as csv_file:
         WRITER.writerow({NAME: name, COUNT: count})
 
 # 最後の挨拶を表示
-THANKS_FILE_PASS = os.path.join(FILE_PASS, 'thanks.md')
-with open(THANKS_FILE_PASS, 'r', encoding='utf-8') as template_file:
-    CONTENTS = template_file.read()
-    CONTENTS = CONTENTS.rstrip(os.linesep)
-    CONTENTS = '{splitter}{sep}{contents}{sep}{splitter}{sep}'.format(
-        contents=CONTENTS, splitter="=" * 64, sep=os.linesep)
-    CONTENTS = termcolor.colored(CONTENTS, ROBOT_COLOR)
-    CONTENTS = string.Template(CONTENTS)
-print(CONTENTS.substitute({'robot_name': ROBOT_NAME, 'user_name': USER_NAME}))
+TEMPLATE = read_csv(FILE_PASS, 'thanks.md', ROBOT_COLOR)
+print(TEMPLATE.substitute({'robot_name': ROBOT_NAME, 'user_name': USER_NAME}))
