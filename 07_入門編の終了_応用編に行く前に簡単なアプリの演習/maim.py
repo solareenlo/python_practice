@@ -48,9 +48,9 @@ with open(CSV, 'r+') as csv_file:
         DATA[row[NAME]] = int(row[COUNT])
 
 if DATA:
+    SORTED_DATA = sorted(DATA, key=DATA.get, reverse=True)
+    NEW_RECOMMEND_RESTAURANT = SORTED_DATA[0]
     while True:
-        SORTED_DATA = sorted(DATA, key=DATA.get, reverse=True)
-        NEW_RECOMMEND_RESTAURANT = SORTED_DATA[0]
         TEMPLATE = read_csv(FILE_PASS, 'greeting.md', ROBOT_COLOR)
         IS_YES = input(TEMPLATE.substitute({
             'robot_name': ROBOT_NAME,
@@ -59,7 +59,11 @@ if DATA:
         if IS_YES.lower() == 'y' or IS_YES.lower() == 'yes':
             break
         if IS_YES.lower() == 'n' or IS_YES.lower() == 'no':
-            break
+            SORTED_DATA.remove(NEW_RECOMMEND_RESTAURANT)
+            print(SORTED_DATA)
+            if not SORTED_DATA:
+                break
+            NEW_RECOMMEND_RESTAURANT = SORTED_DATA[0]
 
 # どのレストランが好きか尋ねて, テストラン名を保存
 TEMPLATE = read_csv(FILE_PASS, 'which_restaurant.md', ROBOT_COLOR)
